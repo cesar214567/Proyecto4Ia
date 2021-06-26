@@ -33,17 +33,11 @@ def RELU(matrix):
 
 def sigmoid(matrix):
     print("executing sigmoid")
-    new_matrix = []
-    for i in matrix:
-        new_matrix.append(1.0/(1+np.exp(-i)))
-    return np.array(new_matrix)
+    return (1.0/(1+np.exp(-matrix)))
 
 def tanh(matrix):
     print("executing tanh")
-    new_matrix = []
-    for i in matrix:
-        new_matrix.append((np.exp(i)-np.exp(-i))/(np.exp(i)+np.exp(-i)))
-    return np.array(new_matrix)
+    return (np.exp(matrix)-np.exp(-matrix))/(np.exp(matrix)+np.exp(-matrix))
 
 
 def SoftMax():
