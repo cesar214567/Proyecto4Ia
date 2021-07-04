@@ -40,10 +40,10 @@ def tanh(matrix):
     return (np.exp(matrix)-np.exp(-matrix))/(np.exp(matrix)+np.exp(-matrix))
 
 
-def SoftMax():
-    return 
+def softMax(vect):
+    return vect/sum(np.exp(vect))
 
-
+    
 class MLP:
     def __init__(self, hidden_num, layer_functs, node_num):
         # (self, int, [funciones], [ints])
@@ -53,12 +53,16 @@ class MLP:
         self.input_size = node_num[0]
         self.layers = layer_functs
         self.w = []
+        self.delta = []
+        self.S = []
         for i in range(1,len(node_num)):
+            self.delta.append(np.zeros(node_num[i])) # K layers X nodos Y ->cantidad de nodos del siguiente layer
+            self.S.append(np.zeros((node_num[i-1],node_num[i]))) # K layers X nodos Y ->cantidad de nodos del siguiente layer
             self.w.append(getRandomMatrix(node_num[i],node_num[i-1]))
         for ws in self.w:
             print("-",ws)         
 
-    
+
     #w {#neuronas capa 1, X} * input {X, 1}   = ans {#neuronas, 1} => layers[i](ans)
 
     def forward(self, item):
@@ -73,9 +77,9 @@ class MLP:
             print("arr activated:", temp_ans.shape)
             print("----------")
         return temp_ans
-    
+        
     def backPropagate(self,output,expected_output):
-        xd = 0
+        for i in (len(node_num)-1,)
         
     def execute(self, dataset):
         counter = 1
@@ -88,7 +92,7 @@ class MLP:
             
 
 if __name__ == '__main__':
-    mlp = MLP(4,[RELU,sigmoid,RELU,tanh],[30,20,40,20,10])
+    mlp = MLP(4,[RELU,sigmoid,RELU,tanh],[30,20,40,20,2])
     dataset = read_db()
     mlp.execute(dataset)    
     # def forward():
