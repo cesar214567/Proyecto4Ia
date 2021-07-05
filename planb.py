@@ -9,25 +9,27 @@ from sklearn.model_selection import train_test_split
 
 def tester(X_train, X_test, y_train, y_test):
     functions = ["relu","logistic","tanh"]
-    hidden_layers = [ (100,2) ,(20,20,2), (100,50,2), (50,20,2)]
-    for i in functions:
-        for j in hidden_layers:
-            clf = MLPClassifier(solver='sgd', alpha=1e-5, hidden_layer_sizes=(100,2), random_state=1, activation="logistic", max_iter = 10000, verbose=False, tol = 0.0000001)
+    hidden_layers = [ (20,20,2), (100,50,2), (50,20,2)]
+    for j in hidden_layers:
+        for i in functions:
+            clf = MLPClassifier(solver='sgd', alpha=1e-5, hidden_layer_sizes=j, random_state=1, activation=i, max_iter = 10000, verbose=False, tol = 0.0000001)
             clf.fit(X_train,y_train)
             good = 0
             false = 0
             result = clf.predict(X_test)
-            for i in range(len(y_test)):
-                if y_test[i] == result[i]:
+            for k in range(len(y_test)):
+                if y_test[k] == result[k]:
                     good += 1
                 else:
                     false += 1
-            print("good", good)
-            print("false",false)
+            #print("good", good)
+            #print("false",false)
             file = open("results.txt", "w")
             file.write(str(i) + " "  + str(j) + " " + str(good) + " " + str(false))
-            plt.plot(clf.loss_curve_)
-            plt.savefig("evidence/error_curve_" + str(i) + "_" + str(j) + ".png")
+            plt.plot(clf.loss_curve_,label = i)
+        plt.legend()
+        plt.savefig("evidence/error_curve_" +"_" + str(j) + ".png")
+        plt.clf()
             #plt.show()
     
 #for i in range() 
