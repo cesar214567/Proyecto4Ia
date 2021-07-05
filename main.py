@@ -24,27 +24,28 @@ from sklearn.model_selection import train_test_split
 def getRandomMatrix(*dimensions):
     return np.random.uniform(0,1,dimensions)
 
-def RELU(matrix):
-    #print("executing RELU")
-    new_matrix = []
-    for i in np.nditer(matrix):
-        if i < 0:
-            new_matrix.append(0)
-        else:
-            new_matrix.append(i)
-    new_matrix = np.array(new_matrix)
-    return new_matrix.reshape(matrix.shape)
+class RELU:
+    def calculate(matrix):
+        #print("executing RELU")
+        new_matrix = []
+        for i in np.nditer(matrix):
+            if i < 0:
+                new_matrix.append(0)
+            else:
+                new_matrix.append(i)
+        new_matrix = np.array(new_matrix)
+        return new_matrix.reshape(matrix.shape)
 
-def devRELU(matrix):
-    #print("executing RELU")
-    new_matrix = []
-    for i in np.nditer(matrix):
-        if i < 0:
-            new_matrix.append(0)
-        else:
-            new_matrix.append(1)
-    new_matrix = np.array(new_matrix)
-    return new_matrix.reshape(matrix.shape)
+    def derivative(matrix):
+        #print("executing RELU")
+        new_matrix = []
+        for i in np.nditer(matrix):
+            if i < 0:
+                new_matrix.append(0)
+            else:
+                new_matrix.append(1)
+        new_matrix = np.array(new_matrix)
+        return new_matrix.reshape(matrix.shape)
 
 class Sigmoid:
     def calculate(matrix):
@@ -117,12 +118,8 @@ class MLP:
         return temp_ans
         
     def backPropagate(self,expected_output,alpha):
-        print(len(self.S))
-        print(len(self.w))
-        print(len(self.layers))
         for i in range(len(self.w),1,-1):
-            print(i)
-            if i == len(self.w)-1:
+            if i == len(self.w):
                 #print(self.S[i].shape)
                 #print("#######")
                 #print(np.array(self.layers[i-1].derivative(self.S[i])).shape)
@@ -145,8 +142,8 @@ class MLP:
                 #print(self.S[i].shape)
                 #print("------")
                 #print(np.array(self.layers[i-1].derivative(self.S[i])).shape)
-                print(self.delta[i])
-                first_mult = np.dot(self.delta[i],self.w[i-1]) * np.array(self.layers[i-1].derivative(self.S[i])).T
+                first_mult =  np.dot(self.delta[i],self.w[i]) * np.array(self.layers[i-1].derivative(self.S[i])).T
+                #first_mult =  np.dot(self.delta[i-1],self.w[i-1]) * np.array(self.layers[i-1].derivative(self.S[i])).T
                 #print("------")
                 #print(first_mult.shape) 
                 dev = np.dot(self.S[i-1],first_mult)
@@ -168,11 +165,11 @@ class MLP:
             oneHotEncoder = np.zeros(2)
             oneHotEncoder[item[1]]=1
             oneHotEncoder = oneHotEncoder.reshape(2,1)
-            print(oneHotEncoder)
-            print(output)
-            print(softMax(output))
-            print("error is:",self.dist(softMax(output),oneHotEncoder))
-            self.backPropagate(oneHotEncoder,0.007)
+            # print(oneHotEncoder)
+            # print(output)
+            # print(softMax(output))
+            print("error is:",self.dist(output.T,oneHotEncoder))
+            self.backPropagate(oneHotEncoder,0.004)
         return
 
     def predict(self, dataset): 
@@ -198,7 +195,7 @@ class MLP:
             
 
 if __name__ == '__main__':
-    mlp = MLP(2,[Tanh,Tanh],[30,15,2])
+    mlp = MLP(4,[Sigmoid,Sigmoid,Tanh,RELU],[30,100,50,30,2])
     dataset = read_db()
     train,test = train_test_split(dataset,test_size = 0.3,shuffle=True)
     mlp.execute(train)    
